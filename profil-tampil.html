@@ -1,0 +1,210 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Tersimpan - Niuhh</title>
+
+    <link rel="stylesheet" href="css/bootstrap-grid.css">
+    <link rel="stylesheet" href="css/styles.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #fff0f4, #ffe3ec, #fff8f5);
+            color: #a65f7b;
+        }
+
+        .no-sticky nav {
+            position: static;
+        }
+
+        .result-section {
+            min-height: 85vh;
+            padding: 70px 20px;
+        }
+
+        .result-card {
+            max-width: 650px;
+            margin: 30px auto;
+            padding: 35px;
+            border-radius: 25px;
+            background: rgba(255,255,255,0.88);
+            box-shadow: 0 10px 35px rgba(190,110,140,0.15);
+        }
+
+        .result-card h1 {
+            text-align: center;
+            color: #bd718e;
+        }
+
+        .result-card > p {
+            text-align: center;
+        }
+
+        .data-item {
+            padding: 15px;
+            margin: 12px 0;
+            background: #fff2f6;
+            border-radius: 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .data-item strong {
+            color: #b96885;
+        }
+
+        .action-buttons {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .action-buttons a,
+        .action-buttons button {
+            display: inline-block;
+            padding: 12px 22px;
+            margin: 5px;
+            border: none;
+            border-radius: 30px;
+            background: #d58ba4;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .action-buttons a:hover,
+        .action-buttons button:hover {
+            background: #b96885;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 25px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+        }
+    </style>
+</head>
+
+<body class="no-sticky">
+
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="profil.html">Profil</a></li>
+            <li>
+                <a href="https://www.instagram.com/iilluhhh_/"
+                   target="_blank">Instagram</a>
+            </li>
+        </ul>
+    </nav>
+
+    <section class="result-section">
+
+        <div class="container">
+            <div class="result-card" id="profilResult">
+
+                <div class="empty-message">
+                    <h1>profile Niluhhh♡</h1>
+                    <p>Memuat data profil...</p>
+                </div>
+
+            </div>
+
+            <div class="action-buttons" id="buttons" hidden>
+                <a href="profil.html">Edit Profil ♡</a>
+                <button onclick="hapusProfil()">Hapus Profil</button>
+            </div>
+        </div>
+
+    </section>
+
+    <footer>
+        <h3>Made with love ♡</h3>
+        <p>My Pink Portfolio - Niuhh</p>
+    </footer>
+
+    <script>
+        function tampilkanProfil() {
+
+            const dataTersimpan = localStorage.getItem("profilNiuhh");
+
+            const result = document.getElementById("profilResult");
+            const buttons = document.getElementById("buttons");
+
+            if (!dataTersimpan) {
+                result.innerHTML = `
+                    <div class="empty-message">
+                        <h1>♡ Profil Belum Ada ♡</h1>
+                        <p>Silakan isi formulir profil terlebih dahulu.</p>
+                        <a href="profil.html">Isi Profil Sekarang</a>
+                    </div>
+                `;
+                buttons.hidden = true;
+                return;
+            }
+
+            try {
+                const profil = JSON.parse(dataTersimpan);
+
+                result.replaceChildren();
+
+                const heading = document.createElement("h1");
+                heading.textContent = "Hello, " + (profil.nama || "Niuhh") + " ♡";
+                result.appendChild(heading);
+
+                const intro = document.createElement("p");
+                intro.textContent = "Welcome to my personal profile ✿";
+                result.appendChild(intro);
+
+                const fields = [
+                    ["NIM", profil.nim],
+                    ["Nama Lengkap", profil.nama],
+                    ["Alamat", profil.alamat],
+                    ["Hobi", profil.hobi],
+                    ["Instagram", profil.instagram]
+                ];
+
+                fields.forEach(function(field) {
+                    const item = document.createElement("div");
+                    item.className = "data-item";
+
+                    const label = document.createElement("strong");
+                    label.textContent = field[0] + ": ";
+
+                    const value = document.createElement("span");
+                    value.textContent = field[1] || "-";
+
+                    item.appendChild(label);
+                    item.appendChild(value);
+                    result.appendChild(item);
+                });
+
+                buttons.hidden = false;
+
+            } catch (error) {
+                result.textContent = "Data profil rusak. Silakan isi kembali formulir.";
+                buttons.hidden = true;
+            }
+        }
+
+        function hapusProfil() {
+            const yakin = confirm("Apakah kamu yakin ingin menghapus profil?");
+
+            if (yakin) {
+                localStorage.removeItem("profilNiuhh");
+                tampilkanProfil();
+            }
+        }
+
+        window.addEventListener("DOMContentLoaded", tampilkanProfil);
+    </script>
+
+</body>
+</html>
